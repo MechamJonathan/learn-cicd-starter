@@ -23,5 +23,16 @@ jobs:
       - name: Build app
         run: ./scripts/buildprod.sh
 
-      - name: Set up gcloud Cloud SDK environment
-        uses: google-github-actions/setup-gcloud@v2.1.4
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: 'Use gcloud CLI'
+        run: 'gcloud info'
+
+      - name: Build docker image and upload
+        run: gcloud builds submit --tag us-central1-docker.pkg.dev/semiotic-runner-449715-b2/notely-ar-repo/notely:latest
